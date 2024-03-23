@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {ApiMeals, Meal} from "../../types";
 import axiosApi from "../../axiosApi";
 import Spinner from "../../components/Spinner/Spinner";
+import {Link} from "react-router-dom";
 
 const Home = () => {
     const [meals, setMeals] = useState<Meal[]>([]);
@@ -33,6 +34,17 @@ const Home = () => {
         void fetchMeals();
     }, [fetchMeals]);
 
+    const removeMeal = async (id: string) => {
+        try {
+            if (window.confirm('Are you sure you want to delete the item?')) {
+                await axiosApi.delete(`/meals/${id}.json`);
+                void fetchMeals();
+            }
+        } catch (e) {
+            console.error(e)
+        }
+    };
+
     const totalCalories = useMemo(() => meals.reduce((acc, meal)=> {
         return acc + meal.calories;
     }, 0), [meals])
@@ -45,21 +57,28 @@ const Home = () => {
                     <Spinner/>
                 ) : meals.map((meal) => (
                     <div key={meal.id} className="card mt-2">
-                        <div className="card-body">
-                            <p> {meal.time} </p>
-                            <p> {meal.description} </p>
-                            <p>
-                                <button
-                                    className="btn btn-warning me-2"
-                                >
-                                    Edit
-                                </button>
-                                <button
-                                    className="btn btn-danger"
-                                >
-                                    Delete
-                                </button>
-                            </p>
+                        <div className="card-body d-flex justify-content-between">
+                            <div>
+                                <h6> {meal.time} </h6>
+                                <p> {meal.description}</p>
+                            </div>
+                            <div className="d-flex flex-row">
+                                <h6 className="me-5 mt-3">{meal.calories}kkal</h6>
+                                <div className="mt-1">
+                                    <Link
+                                        to={ `/meals/${meal.id}/edit` }
+                                        className="btn btn-outline-success me-2 my-sm-0"
+                                    >
+                                        Edit
+                                    </Link>
+                                    <button
+                                        className="btn btn-outline-danger"
+                                        onClick={() => removeMeal(meal.id)}
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 ))

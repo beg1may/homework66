@@ -3,7 +3,7 @@ import {NavLink} from "react-router-dom";
 
 const Appbar = () => {
     return (
-        <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
+        <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <div className="container-fluid">
                 <span className="navbar-brand">Calories Tracker</span>
                 <ul className="navbar-nav mr-auto flex-row flex-nowrap gap-3">
