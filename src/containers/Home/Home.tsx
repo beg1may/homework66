@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {ApiMeals, Meal} from "../../types";
 import axiosApi from "../../axiosApi";
 import Spinner from "../../components/Spinner/Spinner";
@@ -33,11 +33,13 @@ const Home = () => {
         void fetchMeals();
     }, [fetchMeals]);
 
-    console.log(meals);
+    const totalCalories = useMemo(() => meals.reduce((acc, meal)=> {
+        return acc + meal.calories;
+    }, 0), [meals])
 
     return (
         <div className="mt-2">
-            <h4>Total Calories:</h4>
+            <h4>Total Calories: {totalCalories}</h4>
             {
                 isFetching ? (
                     <Spinner/>
